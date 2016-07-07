@@ -4,57 +4,37 @@ import ReactDOM from 'react-dom';
 class App extends React.Component {
 	constructor() {
 		super()
-		this.state = {val : 0}
+
+		this.state = {increasing : false}
 		this.update = this.update.bind(this)
 	}
 
 	update() {
-		this.setState({val: this.state.val + 1 })
+		ReactDOM.render(
+			<App val={this.props.val + 1} />,
+			document.getElementById('app')
+		);
 	}
 
-	componentWillMount() {
-		this.setState({multi: 2})
+	componentWillReceiveProps(nextProps) {
+		this.setState({increasing: nextProps.val > this.props.val})
 	}
 
-	render() {
-		console.log('rendering!')
-		return <button className="btn btn-default" onClick={this.update}>  {this.state.val * this.state.multi} </button>
+	shouldComponentUpdate(nextProps, nextState) {
+		return nextProps.val % 3 === 0
 	}
 
-	componentDidMount() {
-		this.interval = setInterval(this.update, 500)
-	}
-
-	componentWillUnmount() {
-		clearInterval(this.interval)
-	}
-}
-
-
-class Wrapper extends React.Component {
-	constructor() {
-		super()
-	}
-
-	mount() {
-		ReactDOM.render(<App />, document.getElementById('btn-wrapper'))
-	}
-
-	unmount() {
-		ReactDOM.unmountComponentAtNode(document.getElementById('btn-wrapper'))
+	componentDidUpdate(prevProps, prevState) {
+		console.log('prevProps =>', prevProps)
+		console.log('prevState =>', prevState)
 	}
 
 	render() {
-		return (
-			<div>
-				<button className="btn btn-primary" onClick={this.mount.bind(this)}> Mount </button>
-				<button className="btn btn-danger" onClick={this.unmount.bind(this)}> Unmount </button>
-
-				<div id="btn-wrapper"></div>
-			</div>
-		)
+		console.log(this.state.increasing)
+		return <button className="btn btn-default" onClick={this.update}>  {this.props.val} </button>
 	}
 }
 
+App.defaultProps = {val: 0}
 
-export default Wrapper
+export default App
