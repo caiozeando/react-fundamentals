@@ -1,62 +1,42 @@
 import React from 'react';
 
-let Mixin = InnerComponent => class extends React.Component {
+class App extends React.Component {
 	constructor() {
 		super()
 
-		this.update = this.update.bind(this)
-		this.state = {val: 0}
-	}
-
-	update() {
-		this.setState({val: this.state.val + 1});
-	}
-
-	componentWillMount() {
-		console.log('will mount')
+		this.state = {data: [{"id":"licenseKey","status":"TODO","oid":"4028488d55c624c50155c6469d2f01f7","version":0},{"id":"mailServer","status":"DONE","oid":"4028488d55c624c50155c6469db101f8","version":0},{"id":"notification","status":"RUNNING","oid":"4028488d55c624c50155c6469dc201f9","version":0},{"id":"department","status":"FAILED","oid":"4028488d55c624c50155c6469dd801fa","version":0},{"id":"function","status":"TODO","oid":"4028488d55c624c50155c6469dea01fb","version":0}]}
 	}
 
 	render() {
-		return (
-			<InnerComponent 
-				update={this.update}
-				{...this.state}
-				{...this.props}
-			/>
-		)
-	}
+		let rows = this.state.data.map( step => {
+			return <StepRow key={step.oid} data={step} />
+		})
 
-	componentDidMount() {
-		console.log('mounted')
+		return (
+			<table className="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th> id </th>
+						<th> status </th>
+						<th> oid </th>
+						<th> version </th>
+					</tr>
+				</thead>
+				<tbody>{rows}</tbody>
+			</table>
+		)
 	}
 }
 
-const Button = (props)  => 	<button 
-								className="btn btn-primary" 
-								onClick={props.update}> 
-									{props.txt}  - {props.val} 
-							</button>
-
-const Label = (props)  => 	<label 
-								className="label label-warning" 
-								onMouseMove={props.update}> 
-									{props.txt}  - {props.val} 
-							</label>
-
-
-let ButtonMixed = Mixin(Button)
-
-let LabelMixed = Mixin(Label)
-
-class App extends React.Component {
-	render() {
-		return (
-			<div>
-				<ButtonMixed txt="Button"/>
-				<LabelMixed  txt="Label"/>
-			</div>
-		)
-	}
+const StepRow = (props) => {
+	return ( 
+		<tr>
+			<td>{props.data.id}</td>
+			<td>{props.data.status}</td>
+			<td>{props.data.oid}</td>
+			<td>{props.data.version}</td>
+		</tr>
+	)
 }
 
 export default App
