@@ -13,20 +13,20 @@ class App extends React.Component {
 	}
 
 	componentWillMount() {
-		console.log('mounting...')
+		this.setState({multi: 2})
 	}
 
 	render() {
 		console.log('rendering!')
-		return <button className="btn btn-default" onClick={this.update}> {this.state.val} </button>
+		return <button className="btn btn-default" onClick={this.update}>  {this.state.val * this.state.multi} </button>
 	}
 
 	componentDidMount() {
-		console.log('mounted.')
+		this.interval = setInterval(this.update, 500)
 	}
 
 	componentWillUnmount() {
-		console.log('bye!')
+		clearInterval(this.interval)
 	}
 }
 
@@ -44,7 +44,7 @@ class Wrapper extends React.Component {
 		ReactDOM.unmountComponentAtNode(document.getElementById('btn-wrapper'))
 	}
 
-	render(){
+	render() {
 		return (
 			<div>
 				<button className="btn btn-primary" onClick={this.mount.bind(this)}> Mount </button>
